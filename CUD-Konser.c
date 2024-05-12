@@ -3,9 +3,8 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX_KONSER 100 // Maksimal jumlah konser
+#define MAX_KONSER 100
 
-// Definisi struktur untuk data konser
 struct Konser {
     int id;
     char nama[50];
@@ -18,10 +17,9 @@ struct Konser {
     float harga_tiket_regular;
 };
 
-struct Konser daftarKonser[MAX_KONSER]; // Array untuk menyimpan data konser
-int jumlahKonser = 0; // Jumlah konser yang telah ditambahkan
+struct Konser daftarKonser[MAX_KONSER];
+int jumlahKonser = 0;
 
-// Fungsi untuk menambahkan data konser ke dalam array dan file
 void tambahKonser(struct Konser konser) {
     FILE *file = fopen("Konser.txt", "a");
     if (file == NULL) {
@@ -32,11 +30,9 @@ void tambahKonser(struct Konser konser) {
     fprintf(file, "%d|%s|%02d-%02d-%04d|%s|%s|%d|%.2f|%d|%.2f\n", konser.id, konser.nama, konser.tanggal.tm_mday, konser.tanggal.tm_mon + 1, konser.tanggal.tm_year + 1900, konser.tempat, konser.bintang_tamu, konser.jumlah_tiket_vip, konser.harga_tiket_vip, konser.jumlah_tiket_regular, konser.harga_tiket_regular);
     fclose(file);
 
-    // Simpan data ke dalam array
     daftarKonser[jumlahKonser++] = konser;
 }
 
-// Fungsi untuk menampilkan daftar konser
 void tampilkanDaftarKonser() {
     printf("\nDaftar Konser:\n");
     printf("ID  | Nama Konser\n");
@@ -48,7 +44,6 @@ void tampilkanDaftarKonser() {
     }
 }
 
-// Fungsi untuk menghapus konser berdasarkan ID
 void hapusKonser(int id) {
     int i = 0;
     while (i < jumlahKonser) {
@@ -61,7 +56,6 @@ void hapusKonser(int id) {
             jumlahKonser--;
             printf("Konser dengan ID %d telah dihapus.\n", id);
 
-            // Perbarui file Konser.txt
             FILE *file = fopen("Konser.txt", "w");
             if (file == NULL) {
                 printf("Gagal membuka file!");
@@ -80,7 +74,6 @@ void hapusKonser(int id) {
     printf("Konser dengan ID %d tidak ditemukan.\n", id);
 }
 
-// Fungsi untuk menampilkan menu
 void tampilkanMenu() {
     printf("\nMenu:\n");
     printf("1. Tambah Konser\n");
@@ -97,7 +90,7 @@ int main() {
     do {
         tampilkanMenu();
         scanf("%d", &pilihan);
-        fflush(stdin); // Membersihkan buffer stdin
+        fflush(stdin);
 
         switch (pilihan) {
             case 1:
@@ -108,8 +101,8 @@ int main() {
 
                 printf("Tanggal Konser (DD-MM-YYYY): ");
                 scanf("%d-%d-%d", &konser.tanggal.tm_mday, &konser.tanggal.tm_mon, &konser.tanggal.tm_year);
-                konser.tanggal.tm_year -= 1900; // Adjust year to match tm struct format
-                konser.tanggal.tm_mon -= 1; // Adjust month to match tm struct format
+                konser.tanggal.tm_year -= 1900;
+                konser.tanggal.tm_mon -= 1;
                 fflush(stdin);
 
                 printf("Tempat Konser: ");
@@ -140,7 +133,6 @@ int main() {
                 printf("Data konser telah ditambahkan.\n");
                 break;
             case 2:
-                // Edit Konser
                 if (jumlahKonser == 0) {
                     printf("Tidak ada konser yang tersedia untuk diedit.\n");
                     break;
@@ -160,8 +152,8 @@ int main() {
 
                         printf("Tanggal Konser (DD-MM-YYYY): ");
                         scanf("%d-%d-%d", &daftarKonser[i].tanggal.tm_mday, &daftarKonser[i].tanggal.tm_mon, &daftarKonser[i].tanggal.tm_year);
-                        daftarKonser[i].tanggal.tm_year -= 1900; // Adjust year to match tm struct format
-                        daftarKonser[i].tanggal.tm_mon -= 1; // Adjust month to match tm struct format
+                        daftarKonser[i].tanggal.tm_year -= 1900;
+                        daftarKonser[i].tanggal.tm_mon -= 1;
                         fflush(stdin);
 
                         printf("Tempat Konser: ");
@@ -190,7 +182,6 @@ int main() {
 
                         printf("Konser telah berhasil diubah.\n");
 
-                        // Perbarui file Konser.txt
                         FILE *file = fopen("Konser.txt", "w");
                         if (file == NULL) {
                             printf("Gagal membuka file!");
@@ -211,7 +202,6 @@ int main() {
                 }
                 break;
             case 3:
-                // Hapus Konser
                 if (jumlahKonser == 0) {
                     printf("Tidak ada konser yang tersedia untuk dihapus.\n");
                     break;
