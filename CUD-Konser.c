@@ -20,6 +20,31 @@ struct Konser {
 struct Konser daftarKonser[MAX_KONSER];
 int jumlahKonser = 0;
 
+void lihatDetailKonser(int id) {
+    FILE *file = fopen("Konser.txt", "r");
+    if (file == NULL) {
+        printf("Gagal membuka file!");
+        return;
+    }
+    printf("\nDetail Konser %d:\n", id);
+    while (fscanf(file, "%d|%[^|]|%d-%d-%d|%[^|]|%[^|]|%d|%f|%d|%f\n", &daftarKonser[jumlahKonser].id, daftarKonser[jumlahKonser].nama, &daftarKonser[jumlahKonser].tanggal.tm_mday, &daftarKonser[jumlahKonser].tanggal.tm_mon, &daftarKonser[jumlahKonser].tanggal.tm_year, daftarKonser[jumlahKonser].tempat, daftarKonser[jumlahKonser].bintang_tamu, &daftarKonser[jumlahKonser].jumlah_tiket_vip, &daftarKonser[jumlahKonser].harga_tiket_vip, &daftarKonser[jumlahKonser].jumlah_tiket_regular, &daftarKonser[jumlahKonser].harga_tiket_regular) != EOF) {
+        if (daftarKonser[jumlahKonser].id == id) {
+            printf("Nama Konser: %s\n", daftarKonser[jumlahKonser].nama);
+            printf("Tanggal Konser: %02d-%02d-%04d\n", daftarKonser[jumlahKonser].tanggal.tm_mday, daftarKonser[jumlahKonser].tanggal.tm_mon + 1, daftarKonser[jumlahKonser].tanggal.tm_year + 1900);
+            printf("Tempat Konser: %s\n", daftarKonser[jumlahKonser].tempat);
+            printf("Bintang Tamu: %s\n", daftarKonser[jumlahKonser].bintang_tamu);
+            printf("Jumlah Tiket VIP: %d\n", daftarKonser[jumlahKonser].jumlah_tiket_vip);
+            printf("Harga Tiket VIP: %.2f\n", daftarKonser[jumlahKonser].harga_tiket_vip);
+            printf("Jumlah Tiket Regular: %d\n", daftarKonser[jumlahKonser].jumlah_tiket_regular);
+            printf("Harga Tiket Regular: %.2f\n", daftarKonser[jumlahKonser].harga_tiket_regular);
+            fclose(file);
+            return;
+        }
+    }
+    fclose(file);
+    printf("Konser dengan ID %d tidak ditemukan.\n", id);
+}
+
 void tambahKonser(struct Konser konser) {
     FILE *file = fopen("Konser.txt", "a");
     if (file == NULL) {
@@ -76,10 +101,11 @@ void hapusKonser(int id) {
 
 void tampilkanMenu() {
     printf("\nMenu:\n");
-    printf("1. Tambah Konser\n");
-    printf("2. Edit Konser\n");
-    printf("3. Hapus Konser\n");
-    printf("4. Keluar\n");
+    printf("1. Lihat Konser\n");
+    printf("2. Tambah Konser\n");
+    printf("3. Edit Konser\n");
+    printf("4. Hapus Konser\n");
+    printf("5. Keluar\n");
     printf("Pilih menu: ");
 }
 
@@ -93,7 +119,19 @@ int main() {
         fflush(stdin);
 
         switch (pilihan) {
-            case 1:
+        	case 1:
+        		if (jumlahKonser == 0) {
+                    printf("Tidak ada konser yang tersedia untuk dilihat.\n");
+                    break;
+                }
+                tampilkanDaftarKonser();
+                printf("Pilih ID konser untuk melihat detail: ");
+                int idLihat;
+                scanf("%d", &idLihat);
+                fflush(stdin);
+                lihatDetailKonser(idLihat);
+                break;
+            case 2:
                 printf("\nMasukkan Data Konser Baru:\n");
                 printf("Nama Konser: ");
                 scanf("%[^\n]", konser.nama);
@@ -132,7 +170,7 @@ int main() {
                 tambahKonser(konser);
                 printf("Data konser telah ditambahkan.\n");
                 break;
-            case 2:
+            case 3:
                 if (jumlahKonser == 0) {
                     printf("Tidak ada konser yang tersedia untuk diedit.\n");
                     break;
@@ -201,7 +239,7 @@ int main() {
                     printf("Konser dengan ID %d tidak ditemukan.\n", idEdit);
                 }
                 break;
-            case 3:
+            case 4:
                 if (jumlahKonser == 0) {
                     printf("Tidak ada konser yang tersedia untuk dihapus.\n");
                     break;
@@ -213,13 +251,13 @@ int main() {
                 fflush(stdin);
                 hapusKonser(idHapus);
                 break;
-            case 4:
+            case 5:
                 printf("Keluar dari program. Sampai jumpa!\n");
                 break;
             default:
                 printf("Menu tidak valid.\n");
         }
-    } while (pilihan != 4);
+    } while (pilihan != 5);
 
     return 0;
 }
