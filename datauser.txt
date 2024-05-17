@@ -1,7 +1,2 @@
-1070 naufal 865784647 enjoyfest 2 VIP 200000.00
-2141 juned 2020202 enjoyfest 2 VIP 200000.00
-2732 naufal 918393083 enjoyfest 2 VIP 200000.00
-2896 naufal 91910101 enjoyfest 2 VIP 200000.00
-3278 naufal 92738393 enjoyfest 2 VIP 200000.00
-3598 naufal 82929292 enjoyfest 2 VIP 200000.00
-3849 naufal 8282929 enjoyfest 2 VIP 200000.00
+1061 naufal 1931318081 enjoyfest 2 REG 100000.00 0 -1
+1286 messi 835782003 enjoyfest 5 VIP 500000.00 0 -1
