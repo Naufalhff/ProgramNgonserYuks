@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Naomi.h"
+#include "NAOMI.h"
 #include "Ariq.h
 #include "Naufal.h
 #include "Rasyid.h
