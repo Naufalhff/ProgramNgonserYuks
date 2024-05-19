@@ -1,0 +1,4 @@
+promo01 0.05 0
+promo02 0.05 0
+promo03 0.01 0
+promo04 0.20 0
