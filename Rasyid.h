@@ -1,5 +1,5 @@
-#ifndef RASYID_H
-#define RASYID_H
+#ifndef HEADER_H
+#define HEADER_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,5 +28,6 @@ void tambahKonser(struct Konser konser);
 void tampilkanDaftarKonser();
 void hapusKonser(int id);
 void tampilkanMenu();
+void jalankanAplikasi();
 
 #endif
