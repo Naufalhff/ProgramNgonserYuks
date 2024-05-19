@@ -1,51 +1,17 @@
+#include "ariq.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Naomi.h"
-#include "Ariq.h
-#include "Naufal.h
-#include "Rasyid.h
-#include "Yudhis.h
-#include "Naufal.h
-
-bool listEmpty(Queue* q) {
-    return (q->front == NULL);
-}
-
-void createQueue(Queue* q) {
-    q->front = NULL;
-    q->rear = NULL;
-}
-
-void insertAkhir(Queue* q, int idUser) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    if (!newNode) {
-        printf("Alokasi memori gagal!\n");
-        return;
-    }
-    newNode->idUser = idUser;
-    newNode->next = NULL;
-
-    if (q->rear) {
-        q->rear->next = newNode;
-    } else {
-        q->front = newNode;
-    }
-    q->rear = newNode;
-}
-
-void insertMultipleAkhir(Queue* q, int idUserStart, int jumlah) {
-    for (int i = 0; i < jumlah; i++) {
-        insertAkhir(q, idUserStart + i);
-    }
-}
+#include <stdbool.h>
+#include <time.h>
+#include "naufal.h"
 
 int generateUser() {
     srand(time(NULL));
     return rand() % 9000 + 1000;
 }
 
-float TotalBayar(char jenis[], int jumlah, Konser konser) {
+float TotalBayar(char jenis[], int jumlah, struct Konser konser) {
     float hargaTiket = 0;
     if (strcmp(jenis, "VIP") == 0) {
         hargaTiket = konser.harga_tiket_vip;
@@ -58,214 +24,208 @@ float TotalBayar(char jenis[], int jumlah, Konser konser) {
     return jumlah * hargaTiket;
 }
 
-int loadKonserFromFile(Konser konserList[], int maxKonser) {
-    FILE* file = fopen("konser.txt", "r");
+void searchkonser(struct Konser *konser, int konserID, Pemesanan *pemesanan) {
+    FILE *file = fopen("konser.txt", "r");
     if (file == NULL) {
         printf("Gagal membuka file konser.txt!\n");
-        return 0;
-    }
-    int count = 0;
-    while (count < maxKonser && fscanf(file, "%d|%[^|]|%d-%d-%d|%[^|]|%[^|]|%d|%.2f|%d|%.2f\n",
-                                       &konserList[count].id, konserList[count].nama, &konserList[count].tanggal.tm_mday,
-                                       &konserList[count].tanggal.tm_mon, &konserList[count].tanggal.tm_year,
-                                       konserList[count].tempat, konserList[count].bintang_tamu, &konserList[count].jumlah_tiket_vip,
-                                       &konserList[count].harga_tiket_vip, &konserList[count].jumlah_tiket_regular,
-                                       &konserList[count].harga_tiket_regular) != EOF) {
-        konserList[count].tanggal.tm_mon--; 
-        konserList[count].tanggal.tm_year -= 1900;
-        count++;
-    }
-    fclose(file);
-    return count;
-}
-
-void saveKonserToFile(Konser konserList[], int konserCount) {
-    FILE* file = fopen("konser.txt", "w");
-    if (file == NULL) {
-        printf("Gagal membuka file konser.txt untuk menulis!\n");
         return;
     }
-    for (int i = 0; i < konserCount; i++) {
-        fprintf(file, "%d|%s|%d-%d-%d|%s|%s|%d|%.2f|%d|%.2f\n", konserList[i].id, konserList[i].nama,
-                konserList[i].tanggal.tm_mday, konserList[i].tanggal.tm_mon + 1, konserList[i].tanggal.tm_year + 1900,
-                konserList[i].tempat, konserList[i].bintang_tamu, konserList[i].jumlah_tiket_vip, konserList[i].harga_tiket_vip,
-                konserList[i].jumlah_tiket_regular, konserList[i].harga_tiket_regular);
-    }
-    fclose(file);
-}
-
-void searchKonser(Konser konserList[], int konserCount, int konserID, Konser* konser, Pemesanan* pemesanan) {
     int konserDitemukan = 0;
-    for (int i = 0; i < konserCount; i++) {
-        if (konserList[i].id == konserID) {
-            *konser = konserList[i];
-            strcpy(pemesanan->konserNama, konserList[i].nama);
+    while (fscanf(file, "%d|%[^|]|%d-%d-%d|%[^|]|%[^|]|%d|%f|%d|%f\n", &konser->id, konser->nama, &konser->tanggal.tm_mday, &konser->tanggal.tm_mon, &konser->tanggal.tm_year, konser->tempat, konser->bintang_tamu, &konser->jumlah_tiket_vip, &konser->harga_tiket_vip, &konser->jumlah_tiket_regular, &konser->harga_tiket_regular) != EOF) {
+        if (konser->id == konserID) {
             konserDitemukan = 1;
+            strcpy(pemesanan->konserNama, konser->nama);
             break;
         }
     }
+    fclose(file);
     if (!konserDitemukan) {
         printf("Konser dengan ID tersebut tidak ditemukan.\n");
-    }
-}
-
-void saveQueueToFile(Queue* q, const char* filename) {
-    FILE* file = fopen(filename, "w");
-    if (file == NULL) {
-        printf("Gagal membuka file %s untuk menulis!\n", filename);
         return;
     }
-    Node* current = q->front;
-    while (current != NULL) {
-        fprintf(file, "%d\n", current->idUser);
-        current = current->next;
-    }
-    fclose(file);
 }
 
-void loadQueueFromFile(Queue* q, const char* filename) {
-    FILE* file = fopen(filename, "r");
-    if (file == NULL) {
-        printf("Gagal membuka file %s untuk membaca!\n", filename);
-        return;
-    }
-    int idUser;
-    while (fscanf(file, "%d\n", &idUser) != EOF) {
-        insertAkhir(q, idUser);
-    }
-    fclose(file);
-}
-
-void pesan(Queue* vipQueue, Queue* regQueue) {
-    Pemesanan pemesanan;
-    pemesanan.idUser = generateUser();
-    Konser konserList[100];
-    Konser konser;
-    int konserCount = loadKonserFromFile(konserList, 100);
+void pesan(addressRoot root) {
+    Pemesanan *pemesanan = malloc(sizeof(Pemesanan)); // Alokasi memori untuk pemesanan
+    int userID = generateUser();
+    struct Konser konser;
     int konserID;
 
     printf("Masukkan nama: ");
-    scanf("%s", pemesanan.nama);
+    scanf("%s", pemesanan->nama);
     printf("Masukkan no telp: ");
-    scanf("%d", &pemesanan.notelp);
+    scanf("%d", &pemesanan->notelp);
 
     do {
         printf("Masukkan ID Konser yang Dipilih: ");
         scanf("%d", &konserID);
-        searchKonser(konserList, konserCount, konserID, &konser, &pemesanan);
+        searchkonser(&konser, konserID, pemesanan);
     } while (konser.id != konserID);
 
     printf("Masukkan jumlah tiket: ");
-    scanf("%d", &pemesanan.jumlah);
+    scanf("%d", &pemesanan->jumlah);
+    printf("Masukkan jenis tiket (VIP/REG): ");
+    scanf("%s", pemesanan->jenis);
 
-    int tiketCukup = 0;
-
-    while (!tiketCukup) {
-        printf("Masukkan jenis tiket (VIP/REG): ");
-        scanf("%s", pemesanan.jenis);
-
-        if (strcmp(pemesanan.jenis, "VIP") == 0) {
-	    if (konser.jumlah_tiket_vip >= pemesanan.jumlah) {
-	        konser.jumlah_tiket_vip -= pemesanan.jumlah;
-	        tiketCukup = 1;
-	    } else {
-	        printf("Tiket VIP tidak cukup tersedia! Sisa tiket VIP: %d\n", konser.jumlah_tiket_vip);
-	        if (konser.jumlah_tiket_regular >= pemesanan.jumlah) {
-	            printf("Silakan pilih tiket REG. Sisa tiket REG: %d\n", konser.jumlah_tiket_regular);
-	        } else {
-	            printf("Maaf, tiket REG tidak cukup tersedia juga.\n");
-	            return;
-	        }
-	    }
-		} else if (strcmp(pemesanan.jenis, "REG") == 0) {
-		    if (konser.jumlah_tiket_regular >= pemesanan.jumlah) {
-		        konser.jumlah_tiket_regular -= pemesanan.jumlah;
-		        tiketCukup = 1;
-		    } else {
-		        printf("Tiket Regular tidak cukup tersedia! Sisa tiket REG: %d\n", konser.jumlah_tiket_regular);
-		        if (konser.jumlah_tiket_vip >= pemesanan.jumlah) {
-		            printf("Silakan pilih tiket VIP. Sisa tiket VIP: %d\n", konser.jumlah_tiket_vip);
-		        } else {
-		            printf("Maaf, tiket VIP tidak cukup tersedia juga.\n");
-		            return;
-		        }
-		    }
-		} else {
-		    printf("Jenis tiket tidak valid. Silakan pilih VIP atau REG.\n");
-		    return;
-		}
-
-    }
-    if (konser.jumlah_tiket_vip < pemesanan.jumlah && konser.jumlah_tiket_regular < pemesanan.jumlah) {
-            printf("Maaf, konser ini telah sold out.\n");
-            return;
-        }
-
-    float total = TotalBayar(pemesanan.jenis, pemesanan.jumlah, konser);
-    if (total == -1) {
+    // Memastikan input jenis tiket adalah valid
+    if (strcasecmp(pemesanan->jenis, "VIP") != 0 && strcasecmp(pemesanan->jenis, "REG") != 0) {
+        printf("Jenis tiket tidak valid. Silakan masukkan 'VIP' atau 'REG'.\n");
+        free(pemesanan);
         return;
     }
 
-    char data;
+    // Masukkan pemesanan ke dalam antrian
+    float total = TotalBayar(pemesanan->jenis, pemesanan->jumlah, konser);
+    if (total == -1) {
+        free(pemesanan); // Bebaskan memori yang dialokasikan sebelumnya sebelum kembali
+        return;
+    }
+
     printf("Total Bayar: %.2f\n", total);
-    printf("Apakah yakin ingin memesan?(Y/N): ");
-    while (getchar() != '\n');
-    scanf("%c", &data);
+    printf("Apakah yakin ingin memesan? (Y/N): ");
+    char data;
+    while (getchar() != '\n'); // Mengosongkan buffer input
+    scanf(" %c", &data); // Tambahkan spasi sebelum %c untuk mengonsumsi spasi
 
     if (data == 'Y' || data == 'y') {
-        FILE* fp = fopen("datauser.txt", "a");
-        if (fp != NULL) {
-            fprintf(fp, "%d %s %d %s %d %s %.2f %d %d\n", pemesanan.idUser, pemesanan.nama, pemesanan.notelp, pemesanan.konserNama, pemesanan.jumlah, pemesanan.jenis, total, 0, -1);
-            printf("ID User: %d berhasil dipesan!\n", pemesanan.idUser);
-            fclose(fp);
-
-            if (strcmp(pemesanan.jenis, "VIP") == 0) {
-                insertMultipleAkhir(vipQueue, pemesanan.idUser, pemesanan.jumlah);
-                saveQueueToFile(vipQueue, "vipQueue.txt");
-            } else if (strcmp(pemesanan.jenis, "REG") == 0) {
-                insertMultipleAkhir(regQueue, pemesanan.idUser, pemesanan.jumlah);
-                saveQueueToFile(regQueue, "regQueue.txt");
-            }
-
-            // Update konser list and save back to file
-            for (int i = 0; i < konserCount; i++) {
-                if (konserList[i].id == konser.id) {
-                    konserList[i] = konser;
-                    break;
-                }
-            }
-            saveKonserToFile(konserList, konserCount);
+        // Memeriksa ketersediaan slot tiket sebelum melakukan penyimpanan
+        if ((strcasecmp(pemesanan->jenis, "VIP") == 0 && konser.jumlah_tiket_vip < pemesanan->jumlah) ||
+            (strcasecmp(pemesanan->jenis, "REG") == 0 && konser.jumlah_tiket_regular < pemesanan->jumlah)) {
+            printf("Maaf, slot tiket untuk jenis %s habis atau tidak mencukupi. Pesanan tidak dapat diproses.\n", pemesanan->jenis);
         } else {
-            printf("Gagal menyimpan pemesanan.\n");
+            // Perbarui jumlah tiket yang tersedia
+            if (strcasecmp(pemesanan->jenis, "VIP") == 0) {
+                konser.jumlah_tiket_vip -= pemesanan->jumlah;
+            } else {
+                konser.jumlah_tiket_regular -= pemesanan->jumlah;
+            }
+
+            enqueue(root->down, konserID, pemesanan->jenis, userID, pemesanan->nama, pemesanan->jumlah);
+            FILE *fp = fopen("datauser.txt", "a");
+            if (fp != NULL) {
+                enkripsi(pemesanan->nama, 5);
+                enkripsiInt(&pemesanan->notelp, 5);
+                enkripsiFloat(&total, 5);
+                fprintf(fp, "%d %s %d %s %d %s %.2f %.2f %d\n", userID, pemesanan->nama, pemesanan->notelp, pemesanan->konserNama, pemesanan->jumlah, pemesanan->jenis, total, 0, 1);
+                printf("ID User: %d berhasil dipesan!\n", userID);
+            } else {
+                printf("Gagal menyimpan pemesanan.\n");
+            }
+            fclose(fp);
         }
     } else {
         printf("Kembali ke menu utama!\n");
     }
+
+    free(pemesanan);
 }
 
-void printQueue(Queue* q) {
-    Node* current = q->front;
-    while (current != NULL) {
-        printf("%d ", current->idUser);
-        current = current->next;
+
+
+void enkripsi(char *text, int shift) {
+    int i;
+    for(i = 0; i < strlen(text); i++) {
+        if(text[i] >= 'A' && text[i] <= 'Z') {
+            text[i] = ((text[i] - 'A' + shift) % 26) + 'A';
+        } else if(text[i] >= 'a' && text[i] <= 'z') {
+            text[i] = ((text[i] - 'a' + shift) % 26) + 'a';
+        } else if(text[i] >= '0' && text[i] <= '9') {
+            text[i] = ((text[i] - '0' + shift) % 10) + '0';
+        }
     }
-    printf("\n");
+}
+void dekripsi(char *text, int shift) {
+    int i;
+    for(i = 0; i < strlen(text); i++) {
+        if(text[i] >= 'A' && text[i] <= 'Z') {
+            text[i] = ((text[i] - 'A' - shift + 26) % 26) + 'A';
+        } else if(text[i] >= 'a' && text[i] <= 'z') {
+            text[i] = ((text[i] - 'a' - shift + 26) % 26) + 'a';
+        } else if(text[i] >= '0' && text[i] <= '9') {
+            text[i] = ((text[i] - '0' - shift + 10) % 10) + '0';
+        }
+    }
 }
 
-int main() {
-    Queue vipQueue, regQueue;
-    createQueue(&vipQueue);
-    createQueue(&regQueue);
+void enkripsiFloat(float *num, int shift) {
+    // Konversi float menjadi string
+    char str[20];
+    snprintf(str, sizeof(str), "%.2f", *num);
 
-    loadQueueFromFile(&vipQueue, "vipQueue.txt");
-    loadQueueFromFile(&regQueue, "regQueue.txt");
+    // Enkripsi string
+    enkripsi(str, shift);
 
-    pesan(&vipQueue, &regQueue);
+    // Konversi kembali string ke float
+    sscanf(str, "%f", num);
+}
 
-    printf("Antrian VIP:\n");
-    printQueue(&vipQueue);
-    printf("\nAntrian REG:\n");
-    printQueue(&regQueue);
+void dekripsiFloat(float *num, int shift) {
+    // Konversi float menjadi string
+    char str[20];
+    snprintf(str, sizeof(str), "%.2f", *num);
 
-    return 0;
+    // Enkripsi string
+    dekripsi(str, shift);
+
+    // Konversi kembali string ke float
+    sscanf(str, "%f", num);
+}
+
+
+void enkripsiInt(int *num, int shift) {
+    *num = (*num + shift) % 10000; 
+}
+
+void dekripsiInt(int *num, int shift) {
+    *num = (*num - shift + 10000) % 10000;
+}
+
+
+void menuUser() {
+    int choice;
+
+    do {
+        printf("\n===== Menu User =====\n");
+        printf("1. Lihat Konser\n");
+        printf("2. Pemesanan\n");
+        printf("3. Pembayaran\n");
+        printf("4. Lihat Promo\n");
+        printf("5. Keluar\n");
+        printf("Pilih menu (1-5): ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+//                lihatKonser();
+                break;
+            case 2:{
+			    char *fileKonser = "Konser.txt";
+			    char *fileUser = "datauser.txt";
+			    addressRoot root = buatRoot();
+			    if (root != NULL) {
+			        root->down = enqueueKonserFromFile(fileKonser, root->down);
+			        enqueueFromFile(fileUser, root->down, root);
+			    }
+			    pesan(root);
+			    break;
+			}
+
+            case 3:
+                // Deklarasi
+			    muatPromoDariFile();
+			    int idNow = 1070;
+			
+			    // Algoritma
+			    pembayaranUser(idNow);
+                break;
+            case 4:
+                cetakPromo();
+                break;
+            case 5:
+                printf("Terima kasih! Keluar dari menu.\n");
+                break;
+            default:
+                printf("Pilihan tidak valid. Silakan coba lagi.\n");
+        }
+    } while (choice != 5);
 }
