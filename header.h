@@ -28,5 +28,7 @@ void tambahKonser(struct Konser konser);
 void tampilkanDaftarKonser();
 void hapusKonser(int id);
 void tampilkanMenu();
+void jalankanAplikasi(); // Deklarasi fungsi jalankanAplikasi
 
 #endif
+
