@@ -2,7 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "pembayaran.h"
+#include "Ariq.h
+#include "Naufal.h
+#include "Rasyid.h
+#include "Yudhis.h
+#include "Naufal.h
 
 
 int main() {
