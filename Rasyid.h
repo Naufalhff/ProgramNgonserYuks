@@ -1,9 +1,6 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef RASYID_H
+#define RASYID_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <time.h>
 
 #define MAX_KONSER 100
@@ -20,14 +17,15 @@ struct Konser {
     float harga_tiket_regular;
 };
 
-extern struct Konser daftarKonser[MAX_KONSER];
-extern int jumlahKonser;
-
+void muatDataKonser();
 void lihatDetailKonser(int id);
 void tambahKonser(struct Konser konser);
 void tampilkanDaftarKonser();
 void hapusKonser(int id);
 void tampilkanMenu();
-void jalankanAplikasi();
+void prosesLihatKonser();
+void prosesTambahKonser();
+void prosesEditKonser();
+void prosesHapusKonser();
 
 #endif
