@@ -1,6 +1,7 @@
 #ifndef ROY_H
 #define ROY_H
 
+// Struktur untuk menyimpan data pengguna
 typedef struct User {
     int id;
     char name[50];
@@ -14,19 +15,8 @@ typedef struct User {
     struct User* next;
 } User;
 
-typedef struct Tree {
-    User* vip;
-    User* reguler;
-} Tree;
 
-User* createUser(int id, char* name, long phone, char* event, int quantity, char* category, double price, double paid, int validation);
-
-void initTree(Tree* tree);
-void addUserToTree(Tree* tree, User* user);
-void readAndValidateData(const char* filename, Tree* tree);
-void writeValidatedData(const char* filename, Tree* tree);
-void printVIPQueue(Tree* tree);
-void printRegulerQueue(Tree* tree);
-
+void readAndValidateData(const char* filename);
+void enqueue(addressKonser first, int idKonser, char *category, int id, char *name, int quantity);
 
 #endif
