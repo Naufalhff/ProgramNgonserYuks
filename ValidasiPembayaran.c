@@ -84,3 +84,9 @@ void enqueue(addressKonser first, int idKonser, char *category, int id, char *na
         jenisList->jumlah++;
     }
 }
+
+int main() {
+    readAndValidateData("datauser.txt");
+
+    return 0;
+}
