@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "Rasyid.h"
+#include "rasyid.h"
+#include "ariq.h"
 
 struct Konser daftarKonser[MAX_KONSER];
-int jumlahKonser = 0;
+int jumlahKonser;
 
 void muatDataKonser() {
     FILE *file = fopen("Konser.txt", "r");
@@ -48,7 +49,11 @@ void lihatDetailKonser(int id) {
     printf("Konser dengan ID %d tidak ditemukan.\n", id);
 }
 
-void tambahKonser(struct Konser konser) {
+void tambahKonser(struct Konser konser, addressKonser first) {
+	addressKonser nodeBaru;
+	
+	char p2[50];
+    int p1, p3, p4;
     FILE *file = fopen("Konser.txt", "a");
     if (file == NULL) {
         printf("Gagal membuka file!");
@@ -65,8 +70,17 @@ void tambahKonser(struct Konser konser) {
             konser.jumlah_tiket_vip, konser.harga_tiket_vip, konser.jumlah_tiket_regular, konser.harga_tiket_regular);
     fclose(file);
     
+    p1 = konser.id;
+    strcpy(p2, konser.nama);
+    p3 = konser.jumlah_tiket_vip;
+    p4 = konser.jumlah_tiket_regular;
+    
+    nodeBaru = buatNodeKonser(p1, p2, p3, p4);
+    first = pushKonser(first, nodeBaru);
+    
     daftarKonser[jumlahKonser++] = konser;
 }
+
 
 void tampilkanDaftarKonser() {
     printf("\nDaftar Konser:\n");
@@ -79,7 +93,7 @@ void tampilkanDaftarKonser() {
     }
 }
 
-void hapusKonser(int id) {
+void hapusKonser(int id, bool *isDelete) { 
     int i = 0;
     while (i < jumlahKonser) {
         if (daftarKonser[i].id == id) {
@@ -89,8 +103,9 @@ void hapusKonser(int id) {
                 j++;
             }
             jumlahKonser--;
+            
             printf("Konser dengan ID %d telah dihapus.\n", id);
-
+            
             FILE *file = fopen("Konser.txt", "w");
             if (file == NULL) {
                 printf("Gagal membuka file!");
@@ -106,11 +121,13 @@ void hapusKonser(int id) {
                 k++;
             }
             fclose(file);
+            *isDelete = true;
             return;
         }
         i++;
     }
     printf("Konser dengan ID %d tidak ditemukan.\n", id);
+    *isDelete = false;
 }
 
 void tampilkanMenu() {
@@ -136,8 +153,9 @@ void prosesLihatKonser() {
     lihatDetailKonser(idLihat);
 }
 
-void prosesTambahKonser() {
+void prosesTambahKonser(addressKonser first) {
     struct Konser konser;
+    
     printf("\nMasukkan Data Konser Baru:\n");
     printf("Nama Konser: ");
     scanf("%[^\n]", konser.nama);
@@ -173,7 +191,8 @@ void prosesTambahKonser() {
     scanf("%f", &konser.harga_tiket_regular);
     fflush(stdin);
 
-    tambahKonser(konser);
+    tambahKonser(konser, first);
+    
     printf("Data konser telah ditambahkan.\n");
 }
 
@@ -249,15 +268,14 @@ void prosesEditKonser() {
     printf("Konser dengan ID %d tidak ditemukan.\n", idEdit);
 }
 
-void prosesHapusKonser() {
+void prosesHapusKonser(int *idHapus, bool *isDelete){
     if (jumlahKonser == 0) {
         printf("Tidak ada konser yang tersedia untuk dihapus.\n");
         return;
     }
     tampilkanDaftarKonser();
     printf("Pilih ID konser yang akan dihapus: ");
-    int idHapus;
-    scanf("%d", &idHapus);
+    scanf("%d", idHapus);
     fflush(stdin);
-    hapusKonser(idHapus);
+    hapusKonser(*idHapus, isDelete);
 }

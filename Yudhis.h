@@ -1,5 +1,7 @@
-#ifndef yudhis_h
-#define yudhis_h
+#ifndef YUDHIS_H
+#define YUDHIS_H
+
+#include <stdbool.h>
 
 // Struktur data untuk promo
 typedef struct Promo {
@@ -10,7 +12,8 @@ typedef struct Promo {
 } Promo;
 
 // Linked list untuk menyimpan promo
-Promo* head = NULL;
+
+
 void tambahPromo(char kode[], float diskon);
 void hapusPromo(char kode[]);
 float aplikasiPromo(float total, char kode[]);
@@ -18,6 +21,6 @@ void cetakPromo();
 void tambahPromoModul();
 void hapusPromoModul();
 void simpanPromoKeFile();
-void muatPromoDariFile()
+void muatPromoDariFile();
 
-#endif
+#endif // YUDHIS_H

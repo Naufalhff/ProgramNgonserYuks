@@ -3,6 +3,8 @@
 #include <string.h>
 #include "NAOMI.h"
 
+
+
 void initQueue(Queue* q) {
     q->front = NULL;
     q->rear = NULL;
@@ -52,6 +54,12 @@ Person dequeue(Queue* q) {
 void registrasi(Queue* q) {
     Person newPerson;
     char encryptedPassword[100];
+    
+    	printf("                                                                              \n");
+    printf("                                    _  _   ___   ___   _  _  ___  ___  ___          `__   __ _   _  _  __ ___  ___   _ \n");
+    printf("                                   | \\| | / __| / _ \\ | \\| |/ __|| __|| _ \\      \\ \\ / /| | | || |/ // __|/ __| | |\n");
+    printf("                                   | .  || (_ || (_) || .  |\\__ \\| _| |   /       \\   / | |_| ||   < \\__ \\\\__ \\ |_|\n");
+    printf("                                    |_|\\_| \\___| \\___/ |_|\\_||___/|___||_|_\\        |_|   \\___/ |_|\\_\\|___/|___/ (_)\n");
 
     printf("Masukkan Username: ");
     scanf("%s", newPerson.username);

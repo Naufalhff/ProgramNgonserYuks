@@ -18,12 +18,12 @@ void readAndValidateData(const char* filename) {
 
     int id, quantity, validation;
     char name[50], event[50], category[10];
-    int phone;
+    char email[50];
     float price, paid;
 
-    while (fscanf(file, "%d %s %d %s %d %s %f %f %d", &id, name, &phone, event, &quantity, category, &price, &paid, &validation) != EOF) {
-        int validation = (paid < price) ? 1 : (paid == price) ? 0 : 0;
-        fprintf(file2, "%d %s %d %s %d %s %.2f %.2f %d\n", id, name, phone, event, quantity, category, price, paid, validation);
+    while (fscanf(file, "%d %s %s %s %d %s %f %f %d", &id, name, email, event, &quantity, category, &price, &paid, &validation) != EOF) {
+        int validation = (paid < price) ? 0 : (paid == price) ? 0 : 0;
+        fprintf(file2, "%d %s %s %s %d %s %.2f %.2f %d\n", id, name, email, event, quantity, category, price, paid, validation);
     }
 	
     fclose(file);
@@ -33,7 +33,7 @@ void readAndValidateData(const char* filename) {
 }
 
 
-void enqueue(addressKonser first, int idKonser, char *category, int id, char *name, int quantity)
+void push(addressKonser first, int idKonser, char *category, int id, char *name, int quantity)
 {
     addressKonser trav;
     addressUser jenisList;
@@ -83,10 +83,4 @@ void enqueue(addressKonser first, int idKonser, char *category, int id, char *na
     {
         jenisList->jumlah++;
     }
-}
-
-int main() {
-    readAndValidateData("datauser.txt");
-
-    return 0;
 }

@@ -1,11 +1,13 @@
 #ifndef ROY_H
 #define ROY_H
 
+
+#include "ARIQ.h"
 // Struktur untuk menyimpan data pengguna
 typedef struct User {
     int id;
     char name[50];
-    long phone;
+    char email[50];
     char event[50];
     int quantity;
     char category[10];
@@ -17,6 +19,6 @@ typedef struct User {
 
 
 void readAndValidateData(const char* filename);
-void enqueue(addressKonser first, int idKonser, char *category, int id, char *name, int quantity);
+void push(addressKonser first, int idKonser, char *category, int id, char *name, int quantity);
 
 #endif

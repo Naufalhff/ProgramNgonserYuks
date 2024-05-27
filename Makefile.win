@@ -1,0 +1,55 @@
+# Project: Project3
+# Makefile created by Embarcadero Dev-C++ 6.3
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+OBJ      = main.o lihat_tiketkonser.o registrasi.o login.o DataKonser.o promo.o ariq.o ValidasiPembayaran.o naufal.o pembayaran.o
+LINKOBJ  = main.o lihat_tiketkonser.o registrasi.o login.o DataKonser.o promo.o ariq.o ValidasiPembayaran.o naufal.o pembayaran.o
+LIBS     = -L"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib" -L"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/lib" -static-libgcc
+INCS     = -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include"
+CXXINCS  = -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++"
+BIN      = Project3.exe
+CXXFLAGS = $(CXXINCS) 
+CFLAGS   = $(INCS) 
+DEL      = C:\Program Files (x86)\Embarcadero\Dev-Cpp\DevCpp.exe INTERNAL_DEL
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${DEL} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+main.o: main.c
+	$(CC) -c main.c -o main.o $(CFLAGS)
+
+lihat_tiketkonser.o: lihat_tiketkonser.c
+	$(CC) -c lihat_tiketkonser.c -o lihat_tiketkonser.o $(CFLAGS)
+
+registrasi.o: registrasi.c
+	$(CC) -c registrasi.c -o registrasi.o $(CFLAGS)
+
+login.o: login.c
+	$(CC) -c login.c -o login.o $(CFLAGS)
+
+DataKonser.o: DataKonser.c
+	$(CC) -c DataKonser.c -o DataKonser.o $(CFLAGS)
+
+promo.o: promo.c
+	$(CC) -c promo.c -o promo.o $(CFLAGS)
+
+ariq.o: ariq.c
+	$(CC) -c ariq.c -o ariq.o $(CFLAGS)
+
+ValidasiPembayaran.o: ValidasiPembayaran.c
+	$(CC) -c ValidasiPembayaran.c -o ValidasiPembayaran.o $(CFLAGS)
+
+naufal.o: naufal.c
+	$(CC) -c naufal.c -o naufal.o $(CFLAGS)
+
+pembayaran.o: pembayaran.c
+	$(CC) -c pembayaran.c -o pembayaran.o $(CFLAGS)

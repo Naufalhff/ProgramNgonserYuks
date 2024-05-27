@@ -2,23 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "Ariq.h
-#include "Naufal.h
-#include "Rasyid.h
-#include "Yudhis.h
-#include "Naufal.h
+#include "ARIQ.h"
+#include "NAUFAL.h"
+#include "YUDHIS.h"
 
-
-int main() {
-    // Deklarasi
-    muatPromoDariFile();
-    int idNow = 1070;
-
-    // Algoritma
-    pembayaranUser(idNow);
-
-    return 0;
-}
+Promo* head;
 
 void pembayaranUser(int idNow) {
     // Deklarasi variabel
@@ -69,9 +57,9 @@ int menuPembayaran() {
 
 void opsiBayar(char *fileName, int idNow) {
     // Deklarasi variabel
-    int userID, nomorTelepon, jumlahTiket, statusVerif;
+    int userID,jumlahTiket, statusVerif;
     float jumlahBayar, userBayar, tempUserBayar;
-    char username[50], namaKonser[100], jenisTiket[10];
+    char username[50], namaKonser[100], jenisTiket[10], email[50];
     bool isValid = false;
     FILE *file, *fileTemp;
     float total; // Inisialisasi total bayar sebagai float
@@ -86,7 +74,11 @@ void opsiBayar(char *fileName, int idNow) {
     }
 
     // Membaca data dari file dan memproses pembayaran
-    while (fscanf(file, "%d %s %d %s %d %s %f %f %d", &userID, username, &nomorTelepon, namaKonser, &jumlahTiket, jenisTiket, &jumlahBayar, &userBayar, &statusVerif) != EOF) {
+    while (fscanf(file, "%d %s %s %s %d %s %f %f %d", &userID, username, email, namaKonser, &jumlahTiket, jenisTiket, &jumlahBayar, &userBayar, &statusVerif) != EOF) {
+    	int kunci = 13;
+    	dekripsi(username, kunci);
+		dekripsi(email, kunci);
+        
         if (userID == idNow) {
             // Kondisi jika belum melakukan pemesanan tiket
             if (jumlahBayar == 0) {
@@ -149,9 +141,9 @@ void opsiBayar(char *fileName, int idNow) {
                 } while (!isValid);
             }
         }
-
-        // Tulis data user ke file temp
-        fprintf(fileTemp, "%d %s %d %s %d %s %f %f %d\n", userID, username, nomorTelepon, namaKonser, jumlahTiket, jenisTiket, jumlahBayar, userBayar, statusVerif);
+	    enkripsi(username, kunci);
+		enkripsi(email, kunci);
+        fprintf(fileTemp, "%d %s %s %s %d %s %.2f %.2f %d\n", userID, username, email, namaKonser, jumlahTiket, jenisTiket, jumlahBayar, userBayar, statusVerif);
     }
 
     fclose(file);
@@ -164,9 +156,9 @@ void opsiBayar(char *fileName, int idNow) {
 
 void statusPembayaran(char *fileName, int idNow) {
     // Deklarasi variabel
-    int userID, nomorTelepon, jumlahTiket, statusVerif;
+    int userID, jumlahTiket, statusVerif;
     float jumlahBayar, userBayar;
-    char username[50], namaKonser[100], jenisTiket[10];
+    char username[50], namaKonser[100], jenisTiket[10], email[50];
     FILE *file;
 
     // Membuka file untuk membaca data
@@ -178,7 +170,10 @@ void statusPembayaran(char *fileName, int idNow) {
     }
 
     // Membaca data dari file dan menampilkan status pembayaran
-    while (fscanf(file, "%d %s %d %s %d %s %f %f %d", &userID, username, &nomorTelepon, namaKonser, &jumlahTiket, jenisTiket, &jumlahBayar, &userBayar, &statusVerif) != EOF) {
+    while (fscanf(file, "%d %s %s %s %d %s %f %f %d", &userID, username, email, namaKonser, &jumlahTiket, jenisTiket, &jumlahBayar, &userBayar, &statusVerif) != EOF) {
+    	int kunci = 13;
+        dekripsi(username, kunci);
+        dekripsi(email, kunci);
         if (userID == idNow) {
             if (jumlahBayar == 0) {
                 printf("\nAnda belum melakukan pemesanan tiket.\n");
@@ -206,9 +201,9 @@ void statusPembayaran(char *fileName, int idNow) {
 
 void cetakTiket(char *fileName, int idNow) {
     // Deklarasi variabel
-    int userID, nomorTelepon, jumlahTiket, statusVerif;
+    int userID, jumlahTiket, statusVerif;
     float jumlahBayar, userBayar;
-    char username[50], namaKonser[100], jenisTiket[10];
+    char username[50], namaKonser[100], jenisTiket[10], email[50];
     FILE *file;
 
     // Membuka file untuk membaca data
@@ -220,7 +215,10 @@ void cetakTiket(char *fileName, int idNow) {
     }
 
     // Membaca data dari file dan mencetak tiket jika pembayaran sudah lunas
-    while (fscanf(file, "%d %s %d %s %d %s %f %f %d", &userID, username, &nomorTelepon, namaKonser, &jumlahTiket, jenisTiket, &jumlahBayar, &userBayar, &statusVerif) != EOF) {
+    while (fscanf(file, "%d %s %s %s %d %s %f %f %d", &userID, username, email, namaKonser, &jumlahTiket, jenisTiket, &jumlahBayar, &userBayar, &statusVerif) != EOF) {
+    	int kunci = 13;
+        dekripsi(username, kunci);
+        dekripsi(email, kunci);
         if (userID == idNow) {
             if (jumlahBayar == 0) {
                 printf("\nAnda belum melakukan pemesanan tiket.\n");
@@ -229,7 +227,7 @@ void cetakTiket(char *fileName, int idNow) {
             } else {
                 printf("\n->Tiket konser '%s' berjenis '%s'.", namaKonser, jenisTiket);
                 printf("\nNama Pemesan: %s", username);
-                printf("\nNomor Telepon: %d", nomorTelepon);
+                printf("\nEmail: %s", email);
                 printf("\nJumlah Tiket: %d", jumlahTiket);
                 printf("\nTotal Bayar: %.2f\n", jumlahBayar);
             }
@@ -312,12 +310,24 @@ void tambahPromo(char kode[], float diskon) {
     head = newPromo;
 }
 
+
 void cetakPromo() {
-    Promo* current = head;
-    while (current != NULL) {
-        printf("Kode: %s, Diskon: %.2f%%\n", current->kode, current->diskon);
-        current = current->next;
+	
+	FILE* file = fopen("promo.txt", "r");
+    if (file == NULL) {
+        printf("Gagal membuka file untuk menyimpan data promo.\n");
+        return;
     }
+
+	printf("Daftar Promo:\n");
+
+    char kode[50];
+    double diskon;
+    while (fscanf(file, "%s %lf", kode, &diskon) == 2) {
+        printf("Kode Promo: %s | Diskon: %.2f\n", kode, diskon);
+    }
+
+    fclose(file);
 }
 
 void tambahPromoModul() {

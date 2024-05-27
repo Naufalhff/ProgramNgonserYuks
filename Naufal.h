@@ -1,12 +1,16 @@
 #ifndef NAUFAL_H
 #define NAUFAL_H
 
+#include <time.h>
+#include "ARIQ.h"
+
+
 typedef struct Pemesanan {
     int idUser;
     char nama[100];
     int jumlah;
     char jenis[50];
-    int notelp;
+    char email[50];
     char konserNama[50];
 } Pemesanan;
 
@@ -22,28 +26,18 @@ typedef struct Konser {
     float harga_tiket_regular;
 } Konser;
 
-typedef struct Node {
-    int idUser;
-    struct Node* next;
-} Node;
 
-typedef struct Queue {
-    Node* front;
-    Node* rear;
-} Queue;
-
-bool listEmpty(Queue* q);
-void createQueue(Queue* q);
-void insertAkhir(Queue* q, int idUser);
-void insertMultipleAkhir(Queue* q, int idUserStart, int jumlah);
 int generateUser();
-float TotalBayar(char jenis[], int jumlah, Konser konser);
-int loadKonserFromFile(Konser konserList[], int maxKonser);
-void saveKonserToFile(Konser konserList[], int konserCount);
-void searchKonser(Konser konserList[], int konserCount, int konserID, Konser* konser, Pemesanan* pemesanan);
-void saveQueueToFile(Queue* q, const char* filename);
-void loadQueueFromFile(Queue* q, const char* filename);
-void pesan(Queue* vipQueue, Queue* regQueue);
-void printQueue(Queue* q);
+float TotalBayar(char jenis[], int jumlah, struct Konser konser) ;
+void searchkonser(struct Konser *konser, int konserID, Pemesanan *pemesanan);
+void pesan(addressRoot root);
+void menuUser();
+void readKonserFromFile(Konser *konserList, int *konserCount);
+void updateKonserFile(Konser *konserList, int konserCount);
+void enkripsi(char *text, int shift);
+void dekripsi(char *text, int shift);
+
+
+void muatPromoDariFile();
 
 #endif

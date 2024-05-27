@@ -1,7 +1,8 @@
-#include "NAOMI.h"
+#include "NAUFAL.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 
 void lihatKetersediaanTiket() {
     FILE *file = fopen("Konser.txt", "r");
